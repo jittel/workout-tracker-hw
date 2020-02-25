@@ -1,14 +1,21 @@
 const express = require('express');
-const PORT = process.env.PORT || 3000;
 const app = express();
 const path = require('path');
+const mongoose = require("mongoose");
+
+const PORT = process.env.PORT || 3000;
 
 const db = require('./models');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static("public"));
 
-app.use(express.static(path.join(__dirname, "/public")));
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/workout";
+mongoose.connect(MONGODB_URI,{  
+    useNewUrlParser:true,
+    useFindAndModify:false
+})
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "public/index.html"));
